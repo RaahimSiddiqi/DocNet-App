@@ -286,6 +286,7 @@ const ProfileView = ({ toggleProfileMode, userDetails, profileMode, updateUserDe
                                     mode="outlined"
                                     numberOfLines={4}
                                     disabled={editMode == true ? false : true}
+                                    textColor={theme.colors.primaryText}
                                 ></TextInput>
                                 {errors.about && <Text style={{ ...styles.error, ...styles.text_small }} variant='bodySmall'>{errors.about}</Text>}
                             </View>

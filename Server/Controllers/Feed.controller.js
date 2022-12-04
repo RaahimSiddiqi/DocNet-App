@@ -52,11 +52,28 @@ const GetFeed = asyncWrapper(async (req, res) => {
 })
 
 
+const DeletePost = asyncWrapper(async(req, res) => {
+    Feed.deletePost.service({postId: req.body.postId}, (dbError, data) => {
+        if(dbError){
+            res.status(400).json({
+                errorCode : "db/unknown-error",
+            });
+        }
+        else
+            res.status(200).json({
+                data : data
+            });  
+    })
+})
+
+
+
 module.exports = {
     UpdatePost,
     GetFeed,
     SearchPostById,
-    CreatePost
+    CreatePost,
+    DeletePost,
 }
 
 

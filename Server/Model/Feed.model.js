@@ -92,6 +92,21 @@ Feed.getPostbyPostId = new function(){
 };
 
 
+Feed.deletePost = new function(){
+    this.params = ["postId"];
+    this.service = (data, results) => {
+        const sql = `DELETE FROM POST WHERE postId = ?`;
+        db.query(sql, [data.postId], (err, data) => {
+            if(err){
+                console.log(err)
+            }
+            else{
+
+            }
+            results(!err? null : err, data);
+        });
+    };
+};
 
 
 module.exports = Feed;

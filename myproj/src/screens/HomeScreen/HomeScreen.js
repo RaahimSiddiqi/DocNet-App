@@ -1,6 +1,6 @@
-import { View, Image, StyleSheet, ImageBackground, ScrollView, FlatList } from 'react-native'
+import { View, Image, StyleSheet, FlatList, Alert, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState, useContext } from 'react'
-import { Text, TextInput, Button, IconButtonm , Card, Title, Paragraph } from 'react-native-paper';
+import { Text, Card, Paragraph } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { themeContext } from '../../context';
 import axios from 'axios';
@@ -33,6 +33,7 @@ const HomeScreen = () => {
 
 
   function viewPost(postData) {
+    console.log(postData)
     navigation.navigate("PostView", postData)
   }
 
@@ -43,14 +44,19 @@ const HomeScreen = () => {
   const renderPost = ({item}) => {
     if (item) {
       return (
-      <Card style={styles.card} key={item.itemId} onPress={() => viewPost(item)}>
+      <Card style={styles.card} key={item.itemId}>
         <Card.Title title={"r/" + item.category}
                     titleStyle={{...styles.heading}}
-                    subtitle={"Posted by: " + item.userName + "(" + item.creationTime + ")"}
-                    subtitleStyle={{...styles.text_small}}></Card.Title>
-        <Card.Content>
-          <Text style={{...styles.text_medium}}>{item.title}</Text>
-          <Paragraph numberOfLines={3} style={{...styles.text_small}}>{item.body}</Paragraph>
+                    subtitle={<Text onPress={() => navigation.navigate("Profile", item.userName)} 
+                                    style={{...styles.text_small, fontStyle: 'italic', textDecorationLine: 'underline'}}>
+                                    {"Posted by: " + item.userName + " ("+item.creationTime.split("T")[0]+")"}
+                              </Text>}
+        ></Card.Title>
+        <Card.Content >
+          <TouchableOpacity onPress={() => viewPost(item)}>
+            <Text style={{...styles.text_medium.black}}>{item.title}</Text>
+            <Paragraph numberOfLines={3} style={{...styles.text_small}}>{item.body}</Paragraph>
+          </TouchableOpacity>
         </Card.Content>
       </Card>
     
@@ -81,7 +87,7 @@ export default HomeScreen;
 const createStyles = ({colors}) => StyleSheet.create({
   root : {
     flex:1,
-    backgroundColor: "#F9F9F9"
+    backgroundColor: colors.background
   },
   center : {
     marginLeft : 'auto', 
@@ -101,7 +107,8 @@ const createStyles = ({colors}) => StyleSheet.create({
     marginRight: 8,
     marginTop: 5,
     marginBottom: 5,
-    backgroundColor: colors.primaryContainer
+    backgroundColor: colors.primaryContainer,
+    borderWidth: 0.5
   },
   fab: {
     position:'absolute',
@@ -122,8 +129,14 @@ const createStyles = ({colors}) => StyleSheet.create({
     fontSize:20
   },
   text_medium : {
-      color: colors.tertiaryText,
-      fontSize:16
+      grey: {
+        color: colors.tertiaryText,
+        fontSize:16,
+      },
+      black: {
+        color: colors.primaryText,
+        fontSize:16,
+      }
   },
   text_small : {
       color: colors.tertiaryText,
