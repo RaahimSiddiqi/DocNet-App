@@ -32,7 +32,7 @@ Feed.createPost = new function(){
     this.params = ["postId", "userName", "title", "category", "body", "creationTime"];
     this.service = (data, results) => {
 
-        const sql = 'INSERT INTO Post(postId, userName, title, category, body, creationTime) values(?, ?, ?, ?, ?, str_to_date(?, \'%Y-%m-%d\'))';
+        const sql = 'INSERT INTO Post(postId, userName, title, category, body) values(?, ?, ?, ?, ?)';
         db.query(sql, [data.postId, data.userName, data.title, data.category, data.body, data.creationTime], (err, data) => {
             if(err){
                 console.log(err)
