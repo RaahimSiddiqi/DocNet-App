@@ -58,11 +58,11 @@ Feed.updatePost = new function(){
 };
 
 
-Feed.getPosts = new function(){
+Feed.getFeed = new function(){
     this.params = []
     this.service = (data, results) => {
         const sql = `SELECT * FROM POST`;
-        db.query(sql, [], (err, data) => {
+        db.query(sql, (err, data) => {
             if(err){
                 console.log(err)
             }

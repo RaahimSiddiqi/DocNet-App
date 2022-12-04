@@ -22,7 +22,7 @@ const UpdatePost = (req, res) => {
 }
 
 
-const SearchById = asyncWrapper(async (req, res) => {
+const SearchPostById = asyncWrapper(async (req, res) => {
     Feed.getPostbyPostId.service(req.params, (dbError, data) => {
         if (dbError) {
             res.status(400).json({
@@ -38,7 +38,7 @@ const SearchById = asyncWrapper(async (req, res) => {
 
 
 const GetFeed = asyncWrapper(async (req, res) => {
-    Feed.getPosts.service(req.params, (dbError, data) => {
+    Feed.getFeed.service(req.params, (dbError, data) => {
         if (dbError) {
             res.status(400).json({
                 errorCode: "db/unknown-error",
@@ -55,8 +55,7 @@ const GetFeed = asyncWrapper(async (req, res) => {
 module.exports = {
     UpdatePost,
     GetFeed,
-    SearchById,
-    UpdatePost,
+    SearchPostById,
     CreatePost
 }
 
