@@ -22,7 +22,7 @@ const HomeScreen = () => {
     .then((response) => {
       setFeed(response.data.data);
     })
-    .catch((response) => {
+    .catch((error) => {
       if(error.response){        
         Alert.alert("Invalid request.", "Your request could not be processed. Please try again later or contact support.");
       }
@@ -32,8 +32,8 @@ const HomeScreen = () => {
   }
 
 
-  function viewPost() {
-    // navigation.navigate(PostScreen)
+  function viewPost(postData) {
+    navigation.navigate("PostView", postData)
   }
 
   function onRefresh() {
@@ -43,7 +43,7 @@ const HomeScreen = () => {
   const renderPost = ({item}) => {
     if (item) {
       return (
-      <Card style={styles.card} key={item.itemId} onPress={viewPost}>
+      <Card style={styles.card} key={item.itemId} onPress={() => viewPost(item)}>
         <Card.Title title={item.title}
                     titleStyle={{...styles.heading}}
                     subtitle={"Category: " + item.category}

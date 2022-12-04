@@ -12,7 +12,7 @@ export default CertificationScreen = () => {
         axios.post(
             `http://${SERVER_IP}:${SERVER_PORT}/api/certify`,
             formData,
-            { headers: { "authorization": `BEARER ${auth.accessToken}` } }
+            { headers: { "authorization": `BEARER ${auth.accessToken}` }, timeout : 5000 }
         )
             .then(response => {
                 navigation.reset({
