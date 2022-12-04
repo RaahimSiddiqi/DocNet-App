@@ -83,7 +83,6 @@ const ProfileScreen = ({route}) => {
   }
 
     useEffect(() => {
-      console.log(targetUserName)
       userName = targetUserName ? targetUserName : auth.userName;
       getUser(userName);
       getHistory(userName);
@@ -100,7 +99,7 @@ const ProfileScreen = ({route}) => {
   const MedicalHistory = useCallback(() => {
     // console.log("History Component re-render");
     return (
-      <MedicalHistoryView deleteRecord={deleteRecord} userHistory = {history}/>
+      <MedicalHistoryView userDetails={user} deleteRecord={deleteRecord} userHistory = {history}/>
     );
   }, [history])
   

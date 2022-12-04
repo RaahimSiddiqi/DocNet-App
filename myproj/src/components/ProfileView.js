@@ -6,7 +6,7 @@ import { FastField, useFormik, Formik, useFormikContext } from 'formik';
 import * as yup from 'yup';
 import { MemoInputComponent } from './utils/MemoInputField';
 import { DatePickerModal } from 'react-native-paper-dates';
-import { themeContext } from '../context';
+import { authContext, themeContext } from '../context';
 import { calculate_age } from './utils/UtilFunctions';
 
 const schema = yup.object({
@@ -32,6 +32,7 @@ const schema = yup.object({
 const ProfileView = ({ toggleProfileMode, userDetails, profileMode, updateUserDetails }) => {
     let isAlertActive = 0;
     const {theme} = useContext(themeContext);
+    const {auth} = useContext(authContext);
     const styles = createStyles(theme);
 
     const date = new Date();
@@ -101,207 +102,238 @@ const ProfileView = ({ toggleProfileMode, userDetails, profileMode, updateUserDe
         toggleProfileMode();
     }
 
-    return (
-        <>
-        {userDetails &&
-            <Formik
-                validateOnChange={false}
-                validateOnBlur={false}
-                initialValues={{
-                    firstName: userDetails.firstName ? userDetails.firstName  : "",
-                    lastName: userDetails.lastName ? userDetails.lastName: "",
-                    email: userDetails.email ? userDetails.email: "",
-                    dob: userDetails.dob ? userDetails.dob: "",
-                    gender: userDetails.gender ? userDetails.gender: "",
-                    city: userDetails.city ? userDetails.city: "",
-                    about: userDetails.about ? userDetails.about: "",
-                }}
-                validationSchema={schema}
-                onSubmit={(values) => {
-                    Keyboard.dismiss();
-                    _toggleEditMode();
-                    updateUserDetails(values);
-                }}>
-                {({
-                    values,
-                    errors,
-                    handleChange,
-                    handleSubmit,
-                    setFieldValue,
-                    dirty
-                }) => (
-                    <>
-                    <FAB
-                        color="white"
-                        icon={editMode == 0 ? "pencil" : "pencil-off"}
-                        style={{...styles.fab, backgroundColor: theme.colors.secondary}}
-                        onPress={() => toggleEditMode(dirty)}
-                    />
-                    <View style={styles.root}>
-                        <ScrollView keyboardShouldPersistTaps='handled' showsVerticalScrollIndicator={false}>
-                            <View style={{ ...styles.row, flexDirection: "row", width: '100%' }}>
-                                <View style={{ width: '50%', paddingRight: 10 }}>
-                                    <MemoInputComponent disabled={editMode} 
-                                                   name ={"firstName"} 
-                                                   label="Firstname"
-                                                   styles={styles.input}
-                                                   textColor={styles.text_medium.color}
-                                                   labeltextstyles={styles.text_small}
-                                                   />
-                                    {errors.firstName && <Text style={{ ...styles.error }} variant='bodySmall'>{errors.firstName}</Text>}
-                                </View>
-
-                                <View style={{ width: '50%', paddingLeft: 10 }}>
-                                    <MemoInputComponent disabled={editMode} 
-                                                   name ={"lastName"} 
-                                                   label="Lastname"
-                                                   styles={styles.input}
-                                                   textColor={styles.text_medium.color}
-                                                   labeltextstyles={styles.text_small}
-                                                   />
-                                    {errors.lastName && <Text style={{ ...styles.error }} variant='bodySmall'>{errors.lastName}</Text>}
-                                </View>
-                            </View>
-
-                            <View style={{ ...styles.row }}>
-                                <MemoInputComponent disabled={editMode} 
-                                                   name ={"email"} 
-                                                   label="Email"
-                                                   styles={styles.input}
-                                                   textColor={styles.text_medium.color}
-                                                   labeltextstyles={styles.text_small}
-                                                   />
-                                {errors.email && <Text style={{ ...styles.error }} variant='bodySmall'>{errors.email}</Text>}
-                            </View>
-
-                            <View style={{ ...styles.row, flexDirection: "row", width: '100%' }}>
-                                <View style={{ width: '42%', marginRight: '8%' }}>
-                                    <TextInput style={{ ...styles.input }}
-                                        value={age}
-                                        editable={false}
-                                        label={<Text style={styles.text_small}>Age</Text>}
-                                        textColor={styles.text_medium.color}
-                                        disabled
-                                    ></TextInput>
-                                    {errors.age && <Text style={{ ...styles.error }} variant='bodySmall'>{errors.age}</Text>}
-                                </View>
-
-                                <View style={{ width: '42%', marginLeft: '8%', paddingTop: 5 }}>
-                                    <DropDownPicker disabledStyle={{ opacity: 0.6,  borderColor: "lightgrey" }}
-                                        placeholder="Gender"
-                                        label="gender"
-                                        listMode="SCROLLVIEW"
-                                        open={showDropDown}
-                                        value={values.gender}
-                                        items={genderList}
-                                        setOpen={setShowDropDown}
-                                        setValue={item => setFieldValue("gender", item())}
-                                        setItems={setGenderList}
-                                        disabled={editMode == true ? false : true}
-                                    />
-                                    {errors.gender && <Text style={{ ...styles.error }} variant='bodySmall'>{errors.gender}</Text>}
-                                </View>
-                            </View>
-
-                            <View style={{ ...styles.row, flexDirection: "row", width: '100%' }}>
-                                <View style={{ width: '42%', marginRight: '8%' }}>
-                                    <TextInput style={{ ...styles.input }}
-                                        textColor = {theme.colors.primaryText}
-                                        onFocus = {openDatePicker}
-                                        editable={true}
-                                        value = {values.dob}
-                                        label={<Text style={styles.text_small}>D.O.B</Text>}
-                                        disabled
-                                    ></TextInput>
-                                    <DatePickerModal
-                                        locale="en"
-                                        mode="single"
-                                        visible={datePickerOpen}
-                                        date = {date}
-                                        onDismiss={onDismissDatePicker}
-                                        onConfirm={(params) => onConfirmDatePicker(params, setFieldValue)}
-                                        saveLabel={<Text style={{color:"white"}}>Save</Text>}
-                                        startYear={1920}
-                                        endYear={2023}
-                                        />
-                                    {errors.dob && <Text style={{ ...styles.error }} variant='bodySmall'>{errors.dob}</Text>}
-                                </View>
-
-                                <View style={{ width: '42%', marginLeft: '8%' }}>
-                                    <MemoInputComponent disabled={editMode} 
-                                                        name ={"city"} 
-                                                        label="City" 
-                                                        styles={styles.input}  
-                                                        textColor={styles.text_medium.color}
-                                                        labeltextstyles={styles.text_small}
-                                                        />
-                                    {errors.city && <Text style={{ ...styles.error }} variant='bodySmall'>{errors.city}</Text>}
-                                </View>
-                            </View>
-
-                            {userDetails && userDetails.userRole == "DOCTOR" &&
-                                <View style={{ ...styles.doctorView }}>
-                                    <Text style={styles.text_medium}>Certification Details</Text>
-                                    <View style={{ ...styles.row }}>
-                                        <TextInput style={{ ...styles.input, marginBottom: 10 }}
-                                            value={userDetails.degreeTitle}
-                                            label={<Text style={styles.text_small}>Certification</Text>}
-                                            textColor = {theme.colors.primaryText}
-                                            disabled
-                                        ></TextInput>
-
-                                        <TextInput style={{ ...styles.input, marginTop: 10, marginBottom: 10 }}
-                                            value={userDetails.instituteName}
-                                            label={<Text style={styles.text_small}>Institute Name</Text>}
-                                            textColor = {theme.colors.primaryText}
-                                            disabled
-                                        ></TextInput>
-
-                                        <View style={{flexDirection:"row"}}>
-                                            <TextInput style={{ ...styles.input, marginRight: 10, marginTop: 10, marginBottom: 10, width:'50%' }}
-                                                value={userDetails.startDate.split('T')[0]}
-                                                label={<Text style={styles.text_small}>Start Date</Text>}
-                                                textColor = {theme.colors.primaryText}
-                                                disabled
-                                            ></TextInput>
-
-                                            <TextInput style={{ ...styles.input, marginTop: 10, marginLeft: 10, marginBottom: 10, width:'50%' }}
-                                                value={userDetails.endDate.split('T')[0]}
-                                                label={<Text style={styles.text_small}>End Date</Text>}
-                                                textColor = {theme.colors.primaryText}
-                                                disabled
-                                            ></TextInput>
-                                        </View>
+    function renderProfile() {
+        return (
+            <>
+            {userDetails &&
+                <Formik
+                    validateOnChange={false}
+                    validateOnBlur={false}
+                    initialValues={{
+                        firstName: userDetails.firstName ? userDetails.firstName  : "",
+                        lastName: userDetails.lastName ? userDetails.lastName: "",
+                        email: userDetails.email ? userDetails.email: "",
+                        dob: userDetails.dob ? userDetails.dob: "",
+                        gender: userDetails.gender ? userDetails.gender: "",
+                        city: userDetails.city ? userDetails.city: "",
+                        about: userDetails.about ? userDetails.about: "",
+                    }}
+                    validationSchema={schema}
+                    onSubmit={(values) => {
+                        Keyboard.dismiss();
+                        _toggleEditMode();
+                        updateUserDetails(values);
+                    }}>
+                    {({
+                        values,
+                        errors,
+                        handleChange,
+                        handleSubmit,
+                        setFieldValue,
+                        dirty
+                    }) => (
+                        <>
+                        {auth.userName == userDetails.userName && <FAB
+                            color="white"
+                            icon={editMode == 0 ? "pencil" : "pencil-off"}
+                            style={{...styles.fab, backgroundColor: theme.colors.secondary}}
+                            onPress={() => toggleEditMode(dirty)}
+                        />}
+                        <View style={styles.root}>
+                            <ScrollView keyboardShouldPersistTaps='handled' showsVerticalScrollIndicator={false}>
+                                <View style={{ ...styles.row, flexDirection: "row", width: '100%' }}>
+                                    <View style={{ width: '50%', paddingRight: 10 }}>
+                                        <MemoInputComponent disabled={editMode} 
+                                                       name ={"firstName"} 
+                                                       label="Firstname"
+                                                       styles={styles.input}
+                                                       textColor={styles.text_medium.color}
+                                                       labeltextstyles={styles.text_small}
+                                                       />
+                                        {errors.firstName && <Text style={{ ...styles.error }} variant='bodySmall'>{errors.firstName}</Text>}
+                                    </View>
+    
+                                    <View style={{ width: '50%', paddingLeft: 10 }}>
+                                        <MemoInputComponent disabled={editMode} 
+                                                       name ={"lastName"} 
+                                                       label="Lastname"
+                                                       styles={styles.input}
+                                                       textColor={styles.text_medium.color}
+                                                       labeltextstyles={styles.text_small}
+                                                       />
+                                        {errors.lastName && <Text style={{ ...styles.error }} variant='bodySmall'>{errors.lastName}</Text>}
                                     </View>
                                 </View>
-                            }
+    
+                                <View style={{ ...styles.row }}>
+                                    <MemoInputComponent disabled={editMode} 
+                                                       name ={"email"} 
+                                                       label="Email"
+                                                       styles={styles.input}
+                                                       textColor={styles.text_medium.color}
+                                                       labeltextstyles={styles.text_small}
+                                                       />
+                                    {errors.email && <Text style={{ ...styles.error }} variant='bodySmall'>{errors.email}</Text>}
+                                </View>
+    
+                                <View style={{ ...styles.row, flexDirection: "row", width: '100%' }}>
+                                    <View style={{ width: '42%', marginRight: '8%' }}>
+                                        <TextInput style={{ ...styles.input }}
+                                            value={age}
+                                            editable={false}
+                                            label={<Text style={styles.text_small}>Age</Text>}
+                                            textColor={styles.text_medium.color}
+                                            disabled
+                                        ></TextInput>
+                                        {errors.age && <Text style={{ ...styles.error }} variant='bodySmall'>{errors.age}</Text>}
+                                    </View>
+    
+                                    <View style={{ width: '42%', marginLeft: '8%', paddingTop: 5 }}>
+                                        <DropDownPicker disabledStyle={{ opacity: 0.6,  borderColor: "lightgrey" }}
+                                            placeholder="Gender"
+                                            label="gender"
+                                            listMode="SCROLLVIEW"
+                                            open={showDropDown}
+                                            value={values.gender}
+                                            items={genderList}
+                                            setOpen={setShowDropDown}
+                                            setValue={item => setFieldValue("gender", item())}
+                                            setItems={setGenderList}
+                                            disabled={editMode == true ? false : true}
+                                        />
+                                        {errors.gender && <Text style={{ ...styles.error }} variant='bodySmall'>{errors.gender}</Text>}
+                                    </View>
+                                </View>
+    
+                                <View style={{ ...styles.row, flexDirection: "row", width: '100%' }}>
+                                    <View style={{ width: '42%', marginRight: '8%' }}>
+                                        <TextInput style={{ ...styles.input }}
+                                            textColor = {theme.colors.primaryText}
+                                            onFocus = {openDatePicker}
+                                            editable={true}
+                                            value = {values.dob}
+                                            label={<Text style={styles.text_small}>D.O.B</Text>}
+                                            disabled
+                                        ></TextInput>
+                                        <DatePickerModal
+                                            locale="en"
+                                            mode="single"
+                                            visible={datePickerOpen}
+                                            date = {date}
+                                            onDismiss={onDismissDatePicker}
+                                            onConfirm={(params) => onConfirmDatePicker(params, setFieldValue)}
+                                            saveLabel={<Text style={{color:"white"}}>Save</Text>}
+                                            startYear={1920}
+                                            endYear={2023}
+                                            />
+                                        {errors.dob && <Text style={{ ...styles.error }} variant='bodySmall'>{errors.dob}</Text>}
+                                    </View>
+    
+                                    <View style={{ width: '42%', marginLeft: '8%' }}>
+                                        <MemoInputComponent disabled={editMode} 
+                                                            name ={"city"} 
+                                                            label="City" 
+                                                            styles={styles.input}  
+                                                            textColor={styles.text_medium.color}
+                                                            labeltextstyles={styles.text_small}
+                                                            />
+                                        {errors.city && <Text style={{ ...styles.error }} variant='bodySmall'>{errors.city}</Text>}
+                                    </View>
+                                </View>
+    
+                                {userDetails && userDetails.userRole == "DOCTOR" &&
+                                    <View style={{ ...styles.doctorView }}>
+                                        <Text style={styles.text_medium}>Certification Details</Text>
+                                        <View style={{ ...styles.row }}>
+                                            <TextInput style={{ ...styles.input, marginBottom: 10 }}
+                                                value={userDetails.degreeTitle}
+                                                label={<Text style={styles.text_small}>Certification</Text>}
+                                                textColor = {theme.colors.primaryText}
+                                                disabled
+                                            ></TextInput>
+    
+                                            <TextInput style={{ ...styles.input, marginTop: 10, marginBottom: 10 }}
+                                                value={userDetails.instituteName}
+                                                label={<Text style={styles.text_small}>Institute Name</Text>}
+                                                textColor = {theme.colors.primaryText}
+                                                disabled
+                                            ></TextInput>
+    
+                                            <View style={{flexDirection:"row"}}>
+                                                <TextInput style={{ ...styles.input, marginRight: 10, marginTop: 10, marginBottom: 10, width:'50%' }}
+                                                    value={userDetails.startDate.split('T')[0]}
+                                                    label={<Text style={styles.text_small}>Start Date</Text>}
+                                                    textColor = {theme.colors.primaryText}
+                                                    disabled
+                                                ></TextInput>
+    
+                                                <TextInput style={{ ...styles.input, marginTop: 10, marginLeft: 10, marginBottom: 10, width:'50%' }}
+                                                    value={userDetails.endDate.split('T')[0]}
+                                                    label={<Text style={styles.text_small}>End Date</Text>}
+                                                    textColor = {theme.colors.primaryText}
+                                                    disabled
+                                                ></TextInput>
+                                            </View>
+                                        </View>
+                                    </View>
+                                }
+    
+                                <View style={{ ...styles.row, paddblackingTop: 20 }}>
+                                    <Text  style={{ ...styles.text_medium }}>About Me</Text>
+                                    <TextInput style={{ ...styles.multiline_input }}
+                                        onChangeText={handleChange('about')}
+                                        value={values.about}
+                                        editable={editMode == 1 ? true : false}
+                                        multiline
+                                        mode="outlined"
+                                        numberOfLines={4}
+                                        disabled={editMode == true ? false : true}
+                                        textColor={theme.colors.primaryText}
+                                    ></TextInput>
+                                    {errors.about && <Text style={{ ...styles.error, ...styles.text_small }} variant='bodySmall'>{errors.about}</Text>}
+                                </View>
+    
+                                {editMode == 1 &&
+                                    <Button buttonColor={theme.colors.primaryButton} onPress={handleSubmit} style={{ ...styles.button }} mode='contained'>
+                                        Save Changes
+                                    </Button>}
+    
+                                <View style={{ paddingBottom: 75 }}></View>
+                            </ScrollView>
+                        </View>
+                        </>
+                    )}</Formik>}
+            </>
+        );
+    }
 
-                            <View style={{ ...styles.row, paddblackingTop: 20 }}>
-                                <Text  style={{ ...styles.text_medium }}>About Me</Text>
-                                <TextInput style={{ ...styles.multiline_input }}
-                                    onChangeText={handleChange('about')}
-                                    value={values.about}
-                                    editable={editMode == 1 ? true : false}
-                                    multiline
-                                    mode="outlined"
-                                    numberOfLines={4}
-                                    disabled={editMode == true ? false : true}
-                                    textColor={theme.colors.primaryText}
-                                ></TextInput>
-                                {errors.about && <Text style={{ ...styles.error, ...styles.text_small }} variant='bodySmall'>{errors.about}</Text>}
-                            </View>
+    function renderConditionalHistory() {
+        console.log(auth.userRole, userDetails.privacy)
+        if (auth.userName === userDetails.userName) {
+            return (renderProfile());
+        }
+        else {
+            if (auth.userRole === "DOCTOR") {
+                if (userDetails.privacy === '2') {
+                    return (<Text>You are not allowed to view this profile</Text>);
+                }
+                else {
+                    return (renderProfile());
+                }
+                }
+            else if (auth.userRole === "USER") {
+                if (userDetails.privacy === '0') {
+                    return (renderProfile());
+                }
+                else {
+                    return (<Text>You are not allowed to view this profile</Text>);
+                }
+            }
+        }
+      }
 
-                            {editMode == 1 &&
-                                <Button buttonColor={theme.colors.primaryButton} onPress={handleSubmit} style={{ ...styles.button }} mode='contained'>
-                                    Save Changes
-                                </Button>}
-
-                            <View style={{ paddingBottom: 75 }}></View>
-                        </ScrollView>
-                    </View>
-                    </>
-                )}</Formik>}
-        </>
+    return (
+       renderProfile()
     );
 }
 
