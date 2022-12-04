@@ -98,7 +98,7 @@ const createStyles = ({colors}) => StyleSheet.create({
     marginLeft: 5,
     marginRight: 8,
     marginTop: 10,
-    backgroundColor: colors.onPrimaryContainer
+    backgroundColor: colors.secondary
   },
   fab: {
     position:'absolute',
