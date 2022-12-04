@@ -17,7 +17,7 @@ const ProfileScreen = ({route}) => {
   const isFocused = useIsFocused();
   const { auth } = useContext(authContext);
   const { theme } = useContext(themeContext);
-  const targetUserName = route.params
+  const targetUserName = route.params;
   const styles = createStyles(theme);
 
   const [hideProfile, setHideProfile] = React.useState(false);
@@ -83,7 +83,8 @@ const ProfileScreen = ({route}) => {
   }
 
     useEffect(() => {
-      userName = targetUserName ? targetUserName.userName : auth.userName;
+      console.log(targetUserName)
+      userName = targetUserName ? targetUserName : auth.userName;
       getUser(userName);
       getHistory(userName);
       getActivity(userName);

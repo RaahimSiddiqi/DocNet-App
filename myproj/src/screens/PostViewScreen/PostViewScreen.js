@@ -1,18 +1,19 @@
 import { useContext } from "react";
-import { ScrollView, View } from "react-native";
+import { ScrollView, View, StyleSheet, Alert} from "react-native";
 import { IconButton, Text } from "react-native-paper";
 import { authContext, themeContext } from "../../context";
-import { useContext } from "react";
 import axios from "axios";
 import { SERVER_IP, SERVER_PORT } from "../../../config";
+import { useNavigation } from "@react-navigation/native";
 
 export default PostViewScreen = ({ route }) => {
     const {postId, userName, title, body, category, creationTime} = route.params;
     const { auth } = useContext(authContext);
     const { theme } = useContext(themeContext);
+    const navigation = useNavigation();
     const styles = createStyles(theme);
 
-    function deletePost(recordId) {
+    function deletePost() {
         axios.post(`http://${SERVER_IP}:${SERVER_PORT}/posts/deletePost`, {
           postId: postId
         },
@@ -24,8 +25,10 @@ export default PostViewScreen = ({ route }) => {
         })
         .then((response) => {
           console.log("deleted post");
+          navigation.goBack();
         })
         .catch(error => {
+          console.log(error)
           if(error.response){
               switch(error.response.data.errorCode){
                   case "auth/unauthorized-access":
@@ -50,15 +53,15 @@ export default PostViewScreen = ({ route }) => {
                 <IconButton icon="account-circle" size={40}/>
                 <View>
                     <Text variant="titleMedium">{userName}</Text>
-                    
-        {/* <View style = {{flexDirection : "row", alignItems : "center", marginLeft: 'auto'}}>
-            <IconButton icon="share"/>
-            {auth.userName === userName && <IconButton onPress={deletePost} icon="trash-can"/>}
-        </View> */}
+
                     <View style = {{flexDirection : "row"}}>
                         <Text style ={styles.category}>c/{category}</Text>
                         <Text> on {creationTime.split('T')[0]}</Text>
                     </View>
+                </View>
+                <View style = {{flexDirection : "row", alignItems : "center", marginLeft: 'auto'}}>
+                    <IconButton icon="share"/>
+                    {auth.userName === userName && <IconButton onPress={deletePost} icon="trash-can"/>}
                 </View>
             </View>
             <Text style = {styles.title} variant = "headlineSmall">{title}</Text>

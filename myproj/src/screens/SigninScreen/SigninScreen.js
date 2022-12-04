@@ -21,6 +21,7 @@ const SigninScreen = () => {
     // Call only when screen open or when back on screen 
     if (isFocused) {
       setAuth(null);
+      setTheme(null);
     }
   }, [isFocused]);
 

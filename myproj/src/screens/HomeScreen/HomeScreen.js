@@ -1,4 +1,4 @@
-import { View, Image, StyleSheet, FlatList, Alert } from 'react-native'
+import { View, Image, StyleSheet, FlatList, Alert, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState, useContext } from 'react'
 import { Text, Card, Paragraph } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
@@ -44,14 +44,19 @@ const HomeScreen = () => {
   const renderPost = ({item}) => {
     if (item) {
       return (
-      <Card style={styles.card} key={item.itemId} onPress={() => viewPost(item)}>
+      <Card style={styles.card} key={item.itemId}>
         <Card.Title title={"r/" + item.category}
                     titleStyle={{...styles.heading}}
-                    subtitle={"Posted by: " + item.userName + " (" + item.creationTime.split("T")[0] + ")"}
-                    subtitleStyle={{...styles.text_small}}></Card.Title>
-        <Card.Content>
-          <Text style={{...styles.text_medium.black}}>{item.title}</Text>
-          <Paragraph numberOfLines={3} style={{...styles.text_small}}>{item.body}</Paragraph>
+                    subtitle={<Text onPress={() => navigation.navigate("Profile", item.userName)} 
+                                    style={{...styles.text_small, fontStyle: 'italic', textDecorationLine: 'underline'}}>
+                                    {"Posted by: " + item.userName + " ("+item.creationTime.split("T")[0]+")"}
+                              </Text>}
+        ></Card.Title>
+        <Card.Content >
+          <TouchableOpacity onPress={() => viewPost(item)}>
+            <Text style={{...styles.text_medium.black}}>{item.title}</Text>
+            <Paragraph numberOfLines={3} style={{...styles.text_small}}>{item.body}</Paragraph>
+          </TouchableOpacity>
         </Card.Content>
       </Card>
     
