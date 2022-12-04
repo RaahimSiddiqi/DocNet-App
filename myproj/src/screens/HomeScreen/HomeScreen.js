@@ -9,10 +9,15 @@ import { SERVER_IP, SERVER_PORT } from '../../../config';
 const HomeScreen = () => {
   const navigation = useNavigation();
   const [feed, setFeed] = useState([]);
+  const [isRefreshing, setIsRefresing] = useState(false);
   const {theme} = useContext(themeContext);
   const styles = createStyles(theme);
-
+  
   useEffect(() => {
+    getPostFeed();
+  }, [])
+
+  function getPostFeed() {
     axios.get(`http://${SERVER_IP}:${SERVER_PORT}/posts/getFeed`, {timeout : 5000})
     .then((response) => {
       setFeed(response.data.data);
@@ -24,12 +29,16 @@ const HomeScreen = () => {
       else
           Alert.alert("404", "The server is irresponsive. Please try again later or contact support.");
     })
-  }, [])
+  }
+
 
   function viewPost() {
     // navigation.navigate(PostScreen)
   }
 
+  function onRefresh() {
+    getPostFeed();
+  }
 
   const renderPost = ({item}) => {
     if (item) {
@@ -55,6 +64,8 @@ const HomeScreen = () => {
           data={feed}
           renderItem={renderPost}
           keyExtractor={(item) => item.postId}
+          onRefresh={onRefresh}
+          refreshing={isRefreshing}      
         />
       </View>
     </>
