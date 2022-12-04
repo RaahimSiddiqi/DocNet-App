@@ -17,7 +17,7 @@ export const LightTheme = {
       onPrimaryContainer: "white",
 
       primaryButton: "#1976d2",
-      background: "#DAE0E6",
+      background: "#F9F9F9",
 
       primaryIcon: "#1976d2",
     },
@@ -28,6 +28,7 @@ export const DarkTheme = {
     colors: {
       primaryText: "white",
       secondaryText: "grey",
+      tertiaryText: "#B0B0B0",
 
       primary: "#424549",
       secondary: "#36393F",
