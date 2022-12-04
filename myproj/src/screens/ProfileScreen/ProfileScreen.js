@@ -1,4 +1,4 @@
-import { View ,Image, StyleSheet, ImageBackground, useWindowDimensions, ScrollView, KeyboardAvoidingView} from 'react-native'
+import { View ,Image, StyleSheet, ImageBackground, useWindowDimensions, ScrollView, KeyboardAvoidingView, Alert} from 'react-native'
 import React ,{useState, useCallback, useEffect, useContext} from 'react'
 import { Icon, Text, TextInput, Button, Title, Paragraph,  SegmentedButtons, FAB, Avatar} from 'react-native-paper';
 import profilePic from "../../../assets/profile.png"
@@ -11,7 +11,6 @@ import points from "../../../assets/points.png"
 import axios from 'axios';
 import { authContext, themeContext } from '../../context';
 import { SERVER_IP, SERVER_PORT } from '../../../config';
-
 
 const ProfileScreen = ({route}) => {
   const navigation = useNavigation()
@@ -43,9 +42,9 @@ const ProfileScreen = ({route}) => {
       temp["gender"] = temp["gender"]? temp["gender"].toLowerCase() : null;
       setUser(temp);
     })
-    .catch((response) => {
+    .catch((error) => {
       if(error.response){        
-        console.log(error.response.errorCode);
+        console.log(error.response);
         Alert.alert("Invalid request.", "Your request could not be processed. Please try again later or contact support.");
       }
       else

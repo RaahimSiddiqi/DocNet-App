@@ -25,7 +25,7 @@ CREATE TABLE Doctor(
 );
 
 CREATE TABLE Certification(
-    docUserName    VARCHAR(255),
+    userName    VARCHAR(255),
     instituteName  VARCHAR(255),
 	degreeTitle    VARCHAR(255),
     startDate 	   DATE,
@@ -91,3 +91,22 @@ select * from User;
 select * from Doctor;
 select * from Certification;
 select * from User U, UserProfile Up, Doctor D, Certification C where U.userName = Up.userName and U.userName = D.docUserName and D.docUserName = C.docUserName;
+
+
+
+DELIMITER //
+CREATE PROCEDURE certifyUser(IN in_userName VARCHAR(255), IN in_instituteName VARCHAR(255), IN in_degreeTitle VARCHAR(255), IN in_startDate DATE, IN in_endDate DATE)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+		UPDATE User set userRole = 'DOCTOR' WHERE userName = in_userName;
+		INSERT INTO Doctor VALUES(in_userName, 0);
+		INSERT INTO Certification VALUES(in_userName, in_instituteName, in_degreeTitle, in_startDate, in_endDate);
+    COMMIT;
+END;
+//
+DELIMITER ;

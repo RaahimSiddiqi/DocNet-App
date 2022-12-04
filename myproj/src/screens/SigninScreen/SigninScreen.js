@@ -57,8 +57,6 @@ const SigninScreen = () => {
       });
   }
 
-  const onForgetPassword = () => {
-  }
 
   return (
     // <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -76,14 +74,14 @@ const SigninScreen = () => {
       </Text>
 
       <SigninForm results={onSignIn} />
-      <Button
+      {/* <Button
         mode="outlined"
         onPress={onForgetPassword}
         style={globalStyles.button}
         buttonColor="transparent"
         textColor="gray">
         Forgot Password?
-      </Button>
+      </Button> */}
 
       <Button
         mode="contained"
