@@ -1,16 +1,16 @@
-import { View } from "react-native";
+import { useContext } from "react";
+import { ScrollView, View } from "react-native";
 import { IconButton, Text } from "react-native-paper";
-import { authContext } from "../../context";
+import { authContext, themeContext } from "../../context";
 import { useContext } from "react";
 import axios from "axios";
 import { SERVER_IP, SERVER_PORT } from "../../../config";
 
 export default PostViewScreen = ({ route }) => {
-    const {postId, userName, title, body, category} = route.params;
+    const {postId, userName, title, body, category, creationTime} = route.params;
     const { auth } = useContext(authContext);
-
-    console.log(auth);
-
+    const { theme } = useContext(themeContext);
+    const styles = createStyles(theme);
 
     function deletePost(recordId) {
         axios.post(`http://${SERVER_IP}:${SERVER_PORT}/posts/deletePost`, {
@@ -45,19 +45,36 @@ export default PostViewScreen = ({ route }) => {
 
 
     return (
-        <View style={{flex : 1}}>
+        <ScrollView style={{flex : 1, padding : 20}}>
              <View style = {{flexDirection : "row", alignItems : "center"}}>
-                <View style = {{flexDirection : "row", alignItems : "center", marginRight: 'auto'}}>
-                    <IconButton icon="account-circle" size={25}/>
+                <IconButton icon="account-circle" size={40}/>
+                <View>
                     <Text variant="titleMedium">{userName}</Text>
-                </View>
-
-                <View style = {{flexDirection : "row", alignItems : "center", marginLeft: 'auto'}}>
-                    <IconButton icon="share"/>
-                    {auth.userName === userName && <IconButton onPress={deletePost} icon="trash-can"/>}
+                    
+        {/* <View style = {{flexDirection : "row", alignItems : "center", marginLeft: 'auto'}}>
+            <IconButton icon="share"/>
+            {auth.userName === userName && <IconButton onPress={deletePost} icon="trash-can"/>}
+        </View> */}
+                    <View style = {{flexDirection : "row"}}>
+                        <Text style ={styles.category}>c/{category}</Text>
+                        <Text> on {creationTime.split('T')[0]}</Text>
+                    </View>
                 </View>
             </View>
-            <Text>Category : {category}</Text>
-        </View>
+            <Text style = {styles.title} variant = "headlineSmall">{title}</Text>
+            <Text variant = "bodyLarge" style = {styles.body}>{body}</Text>
+        </ScrollView>
     );
 }
+
+const createStyles = ({ colors }) => StyleSheet.create({
+    category : {
+        // color : colors.secondaryText
+    },
+    title : {
+        fontWeight : 'bold',
+    },
+    body : {
+        marginTop : 10,
+    }
+});
