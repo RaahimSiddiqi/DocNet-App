@@ -1,22 +1,19 @@
 const express = require('express');
 const { validationResult } = require('express-validator');
-const User = require('../Model/User.model');
+const Feed = require('../Model/Feed.model');
 const Validate = require('../MiddleWare/Validate');
-const UserController = require('../Controllers/User.controller');
+const FeedController = require('../Controllers/Feed.controller');
 const{
-
-
-
     
-} = require('../Controllers/User.controller')
+} = require('../Controllers/Feed.controller')
 
 
 
 const Router = express.Router();
 
-Router.route('/register').post(  Validate(User.schema, User.createUser.params), Register);
-Router.route('/getUser/:userName').get(Validate(User.schema, User.getUserByUserName.params),SearchByName);
-Router.route('/signIn').post(Validate(User.schema, User.signIn.params),signIn);
+Router.route('/getPosts').get(Authenticate, Validate(Feed.schema, Feed.createFeed.params), Register);
+Router.route('/createPost').get(Authenticate, Validate(Feed.schema, Feed.getFeedByFeedName.params),SearchByName);
+Router.route('/editPost').post(Authenticate, Validate(Feed.schema, Feed.signIn.params),signIn);
 
 
 module.exports = Router;
