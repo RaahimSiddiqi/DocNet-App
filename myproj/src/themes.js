@@ -5,7 +5,8 @@ export const LightTheme = {
     colors: {
       ...DefaultTheme.colors,
       primaryText: "black",
-      secondaryText: "grey",
+      secondaryText: "white",
+      tertiaryText: "#808080",
 
       primary: "#1976d2",
       secondary: "#42a5f5",
@@ -16,7 +17,7 @@ export const LightTheme = {
       onPrimaryContainer: "white",
 
       primaryButton: "#1976d2",
-      background: "white",
+      background: "#DAE0E6",
 
       primaryIcon: "#1976d2",
     },

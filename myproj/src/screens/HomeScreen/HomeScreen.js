@@ -44,14 +44,16 @@ const HomeScreen = () => {
     if (item) {
       return (
       <Card style={styles.card} key={item.itemId} onPress={() => viewPost(item)}>
-        <Card.Title title={item.title}
+        <Card.Title title={"r/" + item.category}
                     titleStyle={{...styles.heading}}
-                    subtitle={"Category: " + item.category}
+                    subtitle={"Posted by: " + item.userName + "(" + item.creationTime + ")"}
                     subtitleStyle={{...styles.text_small}}></Card.Title>
         <Card.Content>
-          <Paragraph style={{...styles.text_medium}}>{item.body}</Paragraph>
+          <Text style={{...styles.text_medium}}>{item.title}</Text>
+          <Paragraph numberOfLines={3} style={{...styles.text_small}}>{item.body}</Paragraph>
         </Card.Content>
       </Card>
+    
       );
     }
   }
@@ -79,7 +81,7 @@ export default HomeScreen;
 const createStyles = ({colors}) => StyleSheet.create({
   root : {
     flex:1,
-    backgroundColor: colors.primaryContainer
+    backgroundColor: "#F9F9F9"
   },
   center : {
     marginLeft : 'auto', 
@@ -97,8 +99,9 @@ const createStyles = ({colors}) => StyleSheet.create({
   card : {
     marginLeft: 5,
     marginRight: 8,
-    marginTop: 10,
-    backgroundColor: colors.secondary
+    marginTop: 5,
+    marginBottom: 5,
+    backgroundColor: colors.primaryContainer
   },
   fab: {
     position:'absolute',
@@ -116,14 +119,25 @@ const createStyles = ({colors}) => StyleSheet.create({
   },
   heading: {
     color: colors.primaryText,
-    fontSize:22
+    fontSize:20
   },
   text_medium : {
-      color: colors.primaryText,
+      color: colors.tertiaryText,
       fontSize:16
   },
   text_small : {
-      color: colors.primaryText,
+      color: colors.tertiaryText,
       fontSize:13
   },
 })
+
+
+// <Card style={styles.card} key={item.itemId} onPress={() => viewPost(item)}>
+// <Card.Title title={item.title}
+//             titleStyle={{...styles.heading}}
+//             subtitle={"Category: " + item.category}
+//             subtitleStyle={{...styles.text_small}}></Card.Title>
+// <Card.Content>
+//   <Paragraph style={{...styles.text_medium}}>{item.body}</Paragraph>
+// </Card.Content>
+// </Card>
