@@ -2,6 +2,7 @@ require("dotenv").config() /*Loads the environment variables from the .env file.
 const express = require('express');
 const User = require('./Routes/User');
 const Feed = require('./Routes/Feed');
+const Comments = require('./Routes/Comments');
 const notFound = require('./middleware/not-found');
 const errorHandlerMiddleware = require('./middleware/error-handler')
 const app = express();
@@ -24,6 +25,7 @@ app.use((req,res,next)=>{
 
 app.use('/api', User);
 app.use('/posts', Feed);
+app.use('/comments', Comments);
 //app.use(notFound)
 app.use(errorHandlerMiddleware);
 

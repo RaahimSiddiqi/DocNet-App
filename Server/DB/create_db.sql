@@ -64,9 +64,9 @@ CREATE TABLE Comment(
 	userName 	    VARCHAR(255),
 	body 	     	TEXT,
     upvotes   	 	INTEGER default 0,
-    creationTime 	timestamp,
+    creationTime 	timestamp default ( current_timestamp() ),
     PRIMARY KEY(commentId),
-	FOREIGN KEY(parentCommentId) REFERENCES Comment(commentId),
+	FOREIGN KEY(parentCommentId) REFERENCES Comment(commentId) ON DELETE CASCADE,
     FOREIGN KEY(postId) REFERENCES Post(postId),
     FOREIGN KEY(userName) REFERENCES User(userName)    
 );
